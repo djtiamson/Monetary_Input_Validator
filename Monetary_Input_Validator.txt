@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define LENGTH_NAME_LIMIT 256
+#define LENGTH_ACCOUNTNUMBER_LIMIT 6
+#define LENGTH_CLIENTNUMBER_LIMIT 6
+#define ACCOUNT_LIMIT 10
+
+typedef struct balance {
+    double balance;
+} BALANCE;
+
+// Function to check if the balance is valid or not
+int is_balance_valid(BALANCE balance) {
+    char balance_str[20]; // Assuming maximum length of string
+    sprintf(balance_str, "%.2lf", balance.balance);
+    
+    // Checks if the balance contains any non-digit character (other than dot)
+    for (int i = 0; i < strlen(balance_str); i++) {
+        if (!isdigit(balance_str[i]) && balance_str[i] != '.') {
+            return 0; // Invalid balance
+        }
+    }
+    
+    // Checks if the balance contains more than one dot
+    int dot_count = 0;
+    for (int i = 0; i < strlen(balance_str); i++) {
+        if (balance_str[i] == '.') {
+            dot_count++;
+            if (dot_count > 1) {
+                return 0; // Invalid balance
+            }
+        }
+    }
+
+    // If all checks pass
+    return 1; // Valid balance
+}
+
+int main() {
+    BALANCE account_balance;
+
+    printf("Enter Balance: ");
+    
+    // Reads whole number and decimal as one double
+    // Separator for decimals will only be (.) dot alone
+    
+    if (scanf("%lf", &account_balance.balance) != 1) {
+        // Input error: not a valid double (non-digits except dot)
+        printf("Invalid input. Balance must be a number.\n");
+        return 1; // Error exit
+    }
+
+    // Clear the input buffer after reading the double
+    while (getchar() != '\n'); 
+
+    // Check if the balance is valid
+    if (is_balance_valid(account_balance)) {
+        printf("Balance is valid.\n");
+        printf("Balance: %.2lf\n", account_balance.balance);
+    } else {
+        printf("Balance is invalid.\n");
+    }
+
+   return 0;
+}
